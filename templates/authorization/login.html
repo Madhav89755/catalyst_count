@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row d-flex justify-content-center align-items-center" style="height: 100vh;">
+            <div class="col-lg-5 col-md-8 col-sm-10">
+                <div class="form-container border border-dark border-2" style="border-color: #afb3b7 !important;">
+                    <div class="heading pb-3 bg-secondary px-3 pt-3" style="background-color: #afb3b7 !important;">
+                        <h2 class="text-white">Login to Continue</h2>
+                    </div>
+                    <form method="POST" action="{% url 'account_login' %}" class="mx-3 my-3 login">
+                        {% csrf_token %}
+                        <div class="mb-2">
+                            <input type="username" class="form-control" placeholder="Username" name="login" id="id_login">
+                        </div>
+                        <div class="mb-2">
+                            <input type="password" class="form-control" placeholder="Password" name="password" id="id_password">
+                        </div>
+                        <div class="mb-2">
+                            <button type="submit" class="btn btn-outline-primary w-100 primaryAction" name="loginBtn">Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

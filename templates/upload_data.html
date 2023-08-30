@@ -1,0 +1,30 @@
+{% extends 'base_layout/base.html' %}
+{% load account %}
+
+{% block title %}Upload Data{% endblock title %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h5 class="display-5">Upload Data</h5>
+            <form action="">
+                
+                <div class="my-5 w-75">
+                    <input type="file" class="form-control">
+                </div>
+                <div>
+                    <button type="submit" name="uploadFile" class="btn btn-outline-primary">Start Uploading</button>
+                </div>
+            </form>
+            
+            <h5 class="display-5 mt-5">Upload Progress</h5>
+            <div class="progress mt-4">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
