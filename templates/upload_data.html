@@ -82,6 +82,14 @@
                     if (e.lengthComputable){
                         const percent = e.loaded/e.total*100
                         console.log(percent)
+                        if(percent === 100){
+                            alertBox.innerHTML=`<div class="alert alert-primary alert-dismissible" role="alert">
+                                File Uploading Compleated, Now Adding entries to the Database.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>`
+                            document.getElementById('btn_status').classList.add('not-visible')
+                            document.getElementById('btn_status').innerHTML='Data Loading to Database...'
+                        }
                         progressBox.innerHTML = `<h5 class="display-5 mt-5">Upload Progress</h5><div class="progress mt-4">
                             <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="${percent}%" aria-valuemin="0" aria-valuemax="100" style="width: ${percent}%">${percent.toFixed(1)}</div>
                         </div>`
@@ -103,7 +111,7 @@
             },
             success: function(response){
                 alertBox.innerHTML = `<div class="alert alert-success alert-dismissible" role="alert">
-                    File Upload Success.
+                    Operation Compleated.
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>`
                 document.getElementById('btn_status').classList.add('not-visible')
