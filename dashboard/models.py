@@ -11,7 +11,7 @@ class uploadedCsvFile(models.Model):
 
 class companiesModel(models.Model):
     unique_number = models.IntegerField()
-    name = models.CharField(max_length=500)
+    company_name = models.CharField(max_length=500)
     domain = models.CharField(max_length=500, null=True, blank=True)
     year_founded = models.IntegerField(null=True, blank=True)
     industry = models.CharField(max_length=100, null=True, blank=True)
@@ -25,4 +25,4 @@ class companiesModel(models.Model):
     total_employee_estimate = models.IntegerField(null=True, blank=True)
     
     def __str__(self):
-        return self.name
+        return self.company_name
