@@ -1,0 +1,105 @@
+{% extends 'base_layout/base.html' %}
+{% load account %}
+
+{% block title %}Query Builder{% endblock title %}
+
+{% block body %}
+
+<h5 class="display-5">Apply Filters</h5>
+<div class="mt-5">
+    <form action="">
+        <div class="container">
+            <div class="row">
+                <div class="col-4 my-1 px-1">
+                    <input type="text" class="form-control border border-secondary border-2 text-center" placeholder="Search Company Name">
+                </div>
+                <div class="col-4 my-1 px-1">
+                    <div class="dropdown w-100">
+                        <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="IndustrySelect" data-bs-toggle="dropdown" aria-expanded="false">
+                          <option value="NA" id="industry_reset">Select Industry</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-4 my-1 px-1">
+                    <div class="dropdown w-100">
+                        <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="yearFounded">
+                          <option value="NA" id="yearFoundedReset">Select Year Founded</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 my-1 mx-0 px-1">
+                    <div class="dropdown w-100">
+                        <div class="dropdown w-100">
+                            <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="city">
+                              <option value="NA" id="cityReset">Select City</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 my-1 mx-0 px-1">
+                    <div class="dropdown w-100">
+                        <div class="dropdown w-100">
+                            <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="state">
+                              <option value="NA" id="stateReset">Select State</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 my-1 mx-0 px-1">
+                    <div class="dropdown w-100">
+                        <div class="dropdown w-100">
+                            <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="country">
+                              <option value="NA" id="countryReset">Select Country</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4 my-1 mx-0 px-1">
+                    <div class="dropdown w-100">
+                        <div class="dropdown w-100">
+                            <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="currentEstimatedEmployeeCount">
+                              <option value="NA" id="currentEstimatedEmployeeCountReset">Select Current Estimated Employee Count</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 my-1 mx-0 px-1">
+                    <div class="dropdown w-100">
+                        <div class="dropdown w-100">
+                            <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="totalEstimatedEmployeeCount">
+                              <option value="NA" id="totalEstimatedEmployeeCountReset">Select Total Estimated Employee Count</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-4 my-1 mx-0 px-1">
+                    <button class="btn btn-primary w-100 text-center fw-bold" type="button" id="queryDataBtn">
+                        Query Data
+                    </button>
+                </div>
+                <div class="col-4 my-1 mx-0 px-1">
+                    <button class="btn btn-secondary text-white fw-bold w-100 text-center" type="button" id="resetQueryFieldsBtn" style="background-color: #afb2b6 !important;">
+                        Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock body %}
+
+{% block javascript %}
+
+<script>
+    $('#query_builder_tab').css('border-bottom','5px solid black')
+    $('#query_builder_tab').css('font-weight','bolder')
+    $('#query_builder_tab').css('border-radius','25%')
+</script>
+{% endblock javascript %}

@@ -1,0 +1,240 @@
+{% extends 'base_layout/base.html' %}
+{% load account %}
+
+
+{% block style %}
+<style>
+    .action_btn{
+        display: block;
+        width: fit-content;
+        margin: 0 10px 0 0;
+    }
+    .action_btn, .action_btn:hover, .action_btn:active{
+        color: black;
+    }
+    .action_btn:hover{
+        font-weight: bolder !important;
+        transform: scale(1.5);
+    }
+</style>
+{% endblock style %}
+
+{% block title %}Users{% endblock title %}
+
+{% block body %}
+
+<h5 class="display-5">Users</h5>
+
+<div class="container mt-5">
+    <div class="row d-flex justify-content-end">
+        <div class="col-lg-2 col-md-4 col-6 mb-4">            
+            <a class="btn btn-primary w-100" data-bs-toggle="modal" href="#registerUserModal" role="button">Add User</a>
+            <!-- User Registration Modal Starts -->
+            <div class="modal fade" id="registerUserModal" aria-hidden="true" aria-labelledby="registerUserModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <form action="{% url 'manage_users' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title">Register New User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-2">
+                                <div class="d-flex flex-rows justify-content-evenly">
+                                    <input type="text" class="form-control" placeholder="First Name" name="first_name" style="margin-right: 5px;">
+                                    <input type="text" class="form-control" placeholder="Last Name" name="last_name" style="margin-left: 5px;">
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex flex-rows">
+                                    <input type="text" class="form-control" placeholder="Username" name="username">
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex flex-rows">
+                                    <input type="email" class="form-control" placeholder="Email" name="email">
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex flex-rows">
+                                    <input type="password" class="form-control" placeholder="Password" name="password_1">
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex flex-rows">
+                                    <input type="password" class="form-control" placeholder="Confirm Password" name="password_2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-outline-primary" name="add_new_user">Register User</button>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+            <!-- User Registration Modal Ends -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex overflow-auto">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Registered On</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in userList %}
+                    <tr>
+                        <td scope="row" class="text-capitalize fw-bold">{{forloop.counter}}</td>
+                        <td class="text-capitalize">{{user.first_name}} {{user.last_name}}</td>
+                        <td class="text-lower">{{user.username}}</td>
+                        <td class="text-lower">{{user.email}}</td>
+                        <td class="text-capitalize">{% if user.is_active == True %}Active{% else %}Inactive{% endif %}</td>
+                        <td class="text-lower">{{user.date_joined|date}}</td>
+                        <td class="text-capitalize">
+                            <div class="d-flex flex-rows">
+                                <a class="action_btn" data-bs-toggle="modal" href="#deleteUserModal" role="button" id="user_obj_{{forloop.counter}}" 
+                                    data-user-id="{{user.id}}" 
+                                    data-user-name="{{user.first_name}} {{user.last_name}}" 
+                                    onclick="editInputField('user_obj_{{forloop.counter}}')">
+                                    <i class="bi bi-trash3 bootstrapIcon" title="Delete User"></i>
+                                </a>
+                                <a class="action_btn" data-bs-toggle="modal" href="#editUserModal" role="button" id="edit_user_obj_{{forloop.counter}}"
+                                    data-user-id="{{user.id}}" 
+                                    data-first-name="{{user.first_name}}" 
+                                    data-last-name="{{user.last_name}}" 
+                                    data-email="{{user.email}}" 
+                                    data-isActive="{{user.is_active}}" 
+                                    onclick="editUserInputField('edit_user_obj_{{forloop.counter}}')">
+                                    <i class="bi bi-pencil-square" title="Edit User"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <!-- User Deletion Modal Starts -->
+            <div class="modal fade" id="deleteUserModal" aria-hidden="true" aria-labelledby="deleteUserModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <form action="{% url 'manage_users' %}" method="POST" id="deleteUserForm">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title">Delete User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="$('#deleteUserForm')[0].reset(); $('#user_name_box').html('')"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-2">
+                                <div class="d-flex">
+                                    Delete User <span class="mx-1 px-1 fw-bold" id="user_name_box"></span> ?
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex flex-rows">
+                                    <input type="hidden" class="form-control" id="user_id" name="user_id">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-outline-danger" name="deleteUser">Delete</button>
+                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+            <!-- User Deletion Modal Ends -->
+            
+            <!-- User Registration Modal Starts -->
+            <div class="modal fade" id="editUserModal" aria-hidden="true" aria-labelledby="editUserModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                    <form action="{% url 'manage_users' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title">Update User <span class="fw-bold" id="edit_user_name"></span></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" class="form-control" name="user_id" id="user_edit_id">
+                            <div class="mb-2">
+                                <div class="d-flex flex-rows justify-content-evenly">
+                                    <input type="text" class="form-control" placeholder="First Name" name="first_name" id="edit_first_name" style="margin-right: 5px;">
+                                    <input type="text" class="form-control" placeholder="Last Name" name="last_name" id="edit_last_name" style="margin-left: 5px;">
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex flex-rows">
+                                    <input type="email" class="form-control" placeholder="Email" name="email" id="edit_email">
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="d-flex flex-rows">
+                                    <input type="checkbox" placeholder="is Active" name="isActiveCheckbox" name="isActiveCheckbox" id="isActiveCheckbox" style="margin-right: 5px !important;">
+                                    <label for="isActiveCheckbox">Active Status</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-outline-primary" name="edit_user">Update User</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+            <!-- User Registration Modal Ends -->
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
+{% block javascript %}
+
+<script>
+    function editInputField(id){
+        let elem = $(`#${id}`)
+        let user_name = elem.attr('data-user-name')
+        let user_id = elem.attr('data-user-id')
+        $('#user_name_box').html(user_name)
+        $('#user_id').val(user_id)
+    }
+    function editUserInputField(id){
+        let elem = $(`#${id}`)
+        let first_name = elem.attr('data-first-name')
+        let last_name = elem.attr('data-last-name')
+        let user_id = elem.attr('data-user-id')
+        let email = elem.attr('data-email')
+        let isActive = elem.attr('data-isActive')
+
+        let full_name = first_name+' '+last_name
+
+        $('#edit_user_name').html(full_name)
+        $('#edit_first_name').val(first_name)
+
+        if (isActive=='True'){
+            $('#isActiveCheckbox').prop('checked', true);
+        }else{
+            $('#isActiveCheckbox').prop('checked', false);
+        }
+        
+        $('#edit_last_name').val(last_name)
+        $('#user_edit_id').val(user_id)
+        $('#edit_email').val(email)
+    }
+
+    $('#manager_user_tab').css('border-bottom','5px solid black')
+    $('#manager_user_tab').css('font-weight','bolder')
+    $('#manager_user_tab').css('border-radius','25%')
+</script>
+{% endblock javascript %}
