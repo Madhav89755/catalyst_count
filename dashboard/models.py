@@ -1,6 +1,14 @@
 from django.db import models
 
 # Create your models here.
+
+class uploadedCsvFile(models.Model):
+    uploaded_file = models.FileField(upload_to='csv_files/')
+    title = models.CharField(max_length=500)
+
+    def __str__(self):
+        return self.title
+
 class companiesModel(models.Model):
     unique_number = models.IntegerField()
     name = models.CharField(max_length=500)
