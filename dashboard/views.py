@@ -15,8 +15,8 @@ import time
 def upload_data(request):
     if request.method == 'POST':
         # save the uploaded file here
-            uploaded_file = request.FILES.get('image')
-        # try:
+        uploaded_file = request.FILES.get('image')
+        try:
             # to upload the file to the database
             filesUploadModelObj = uploadedCsvFile()
             filesUploadModelObj.title = "NA"
@@ -72,56 +72,16 @@ def upload_data(request):
                 thread.join()
 
             print("All threads finished")
-
-                # instances = [companiesModel(**record) for record in records]
-                # companiesModel.objects.bulk_create(instances)
-
-
-                # for index, row in chunk.iterrows():
-
-                #     companiesModelObj = companiesModel()
-                #     companiesModelObj.unique_number = row[0]
-                #     companiesModelObj.name = row['name']
-                #     companiesModelObj.domain = row['domain']
-                #     if row['year founded'] != 0:
-                #         companiesModelObj.year_founded = row['year founded']
-                    
-                #     companiesModelObj.industry = row['industry']
-                #     companiesModelObj.size_range = row['size range']
-                #     companiesModelObj.locality = row['locality']
-                    
-                #     if row['locality'] != '':
-                #         companiesModelObj.city = str(row['locality']).split(',')[0]
-                #         try:
-                #             companiesModelObj.state = str(row['locality']).split(',')[1]
-                #         except:
-                #             pass
-                    
-                #     companiesModelObj.country = row['country']
-                #     companiesModelObj.linkedin_url = row['linkedin url']
-
-                #     if row['current employee estimate'] != '':
-                #         companiesModelObj.current_employee_estimate = row['current employee estimate']
-                    
-                #     if row['total employee estimate'] != '':
-                #         companiesModelObj.total_employee_estimate = row['total employee estimate']
-
-                #     companiesModelObj.save()
-            # to upload the content of the file to the database
-            # data=''
-            # with open(filesUploadModelObj.uploaded_file.url, 'rb') as f:
-            #     data=f.read()
-            # print(data)
-        # except Exception as e:
-        #     print(e)
-        #     exception_type, exception_object, exception_traceback = sys.exc_info()
-        #     filename = exception_traceback.tb_frame.f_code.co_filename
-        #     line_number = exception_traceback.tb_lineno
-        #     print("Exception type: ", exception_type)
-        #     print("File name: ", filename)
-        #     print("Line number: ", line_number)
-        #     response_message = "An error Occurred. Please Try Again"
-            return JsonResponse({'message':response_message})
+        except Exception as e:
+            print(e)
+            exception_type, exception_object, exception_traceback = sys.exc_info()
+            filename = exception_traceback.tb_frame.f_code.co_filename
+            line_number = exception_traceback.tb_lineno
+            print("Exception type: ", exception_type)
+            print("File name: ", filename)
+            print("Line number: ", line_number)
+            response_message = "An error Occurred. Please Try Again"
+        return JsonResponse({'message':response_message})
     return render(request, 'upload_data.html')
 
 @login_required(login_url='login_page')
