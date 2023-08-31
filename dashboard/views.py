@@ -5,6 +5,9 @@ from django.http import JsonResponse
 from .models import *
 import pandas as pd
 import sys
+import threading
+import time
+
 # Create your views here.
 
 @csrf_exempt
@@ -21,8 +24,8 @@ def upload_data(request):
             filesUploadModelObj.save()
             response_message = "File Uploaded Successfully"
 
-            parent_df=pd.read_csv(filesUploadModelObj.uploaded_file, iterator=True, chunksize=100000)
-            for chunk in parent_df:
+            def upload_chunk_data(chunk):
+                # this function is called by the threads to read the files and upload data inside them chunk by chunk
                 chunk = chunk.rename(columns={
                     'Unnamed: 0':'unique_number',
                     'name':'company_name',
@@ -30,12 +33,48 @@ def upload_data(request):
                     'size range': 'size_range',
                     'linkedin url': 'linkedin_url',
                     'current employee estimate': 'current_employee_estimate',
-                    'total employee estimate': 'current_employee_estimate'
+                    'total employee estimate': 'total_employee_estimate'
                 })
+                chunk[['city', 'state', 'country_2']] = chunk['locality'].str.split(',', expand=True)
+                chunk.drop(columns="country_2", inplace=True)
+                chunk['year_founded'].fillna(value = 0, inplace=True)
                 print(chunk)
-                records = chunk.to_records(index=False)
-                instances = [companiesModel(**record) for record in records]
+                instances = [companiesModel(
+                    unique_number = row['unique_number'],
+                    company_name = row['company_name'],
+                    domain = row['domain'],
+                    year_founded = row['year_founded'],
+                    industry = row['industry'],
+                    size_range = row['size_range'],
+                    locality = row['locality'],
+                    city = row['city'],
+                    state = row['state'],
+                    country = row['country'],
+                    linkedin_url = row['linkedin_url'],
+                    current_employee_estimate = row['current_employee_estimate'],
+                    total_employee_estimate = row['total_employee_estimate']
+                ) for index, row in chunk.iterrows()]
                 companiesModel.objects.bulk_create(instances)
+
+            parent_df=pd.read_csv(filesUploadModelObj.uploaded_file, iterator=True, chunksize=100000)
+            threads = []
+            for chunk in parent_df:
+                # Create multiple threads
+                thread = threading.Thread(target=upload_chunk_data, args=(chunk,))
+                threads.append(thread)
+
+            # Start the threads
+            for thread in threads:
+                thread.start()
+
+            # Wait for all threads to finish
+            for thread in threads:
+                thread.join()
+
+            print("All threads finished")
+
+                # instances = [companiesModel(**record) for record in records]
+                # companiesModel.objects.bulk_create(instances)
 
 
                 # for index, row in chunk.iterrows():
