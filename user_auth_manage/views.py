@@ -2,14 +2,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+from allauth.account.views import LoginView
 
 # Create your views here.
-def loginView(request):
-    return render(request, 'authorization/login.html')
+class MyLoginView(LoginView):
+    template_name = 'authorization/login.html'
 
 
 
-@login_required(login_url='login_page')
+@login_required(login_url='account_login')
 def manage_users(request):
     context={}
     if request.method =="GET":

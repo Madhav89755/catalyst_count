@@ -27,10 +27,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = 'django-insecure-#e@b-pohl7x3idb7v=u6h8$lwla1tl!z7&m!0ke_=#qwd4hs38'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -102,7 +102,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_REDIRECT_URL = 'dashboard'
-LOGOUT_REDIRECT_URL = 'login_page'
+LOGOUT_REDIRECT_URL = 'account_login'
 
 WSGI_APPLICATION = 'catalyst_count.wsgi.application'
 ACCOUNT_LOGOUT_ON_GET = True

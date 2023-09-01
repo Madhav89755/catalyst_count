@@ -18,7 +18,7 @@ import io
 # Create your views here.
 
 @csrf_exempt
-@login_required(login_url='login_page')
+@login_required(login_url='account_login')
 def upload_data(request):
     if request.method == 'POST':
         # save the uploaded file here
@@ -124,7 +124,7 @@ def upload_data(request):
         return JsonResponse({'message':response_message})
     return render(request, 'upload_data.html')
 
-@login_required(login_url='login_page')
+@login_required(login_url='account_login')
 def query_builder(request):
     companiesModelObj = companiesModel.objects.all()
     context = {}
