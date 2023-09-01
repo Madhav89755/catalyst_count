@@ -6,24 +6,33 @@
 {% block body %}
 
 <h5 class="display-5">Apply Filters</h5>
+<div id="alert-box"></div>
+
 <div class="mt-5">
-    <form action="">
+    <form action="" id="searchResultForm">
+        {% csrf_token %}
         <div class="container">
             <div class="row">
                 <div class="col-4 my-1 px-1">
-                    <input type="text" class="form-control border border-secondary border-2 text-center" placeholder="Search Company Name">
+                    <input type="text" class="form-control border border-secondary border-2" id="company_name" name="company_name" placeholder="Search Company Name">
                 </div>
                 <div class="col-4 my-1 px-1">
                     <div class="dropdown w-100">
-                        <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="IndustrySelect" data-bs-toggle="dropdown" aria-expanded="false">
-                          <option value="NA" id="industry_reset">Select Industry</option>
+                        <select class="form-control border border-secondary border-2 w-100" name="industry" id="industry" type="button" id="IndustrySelect" data-bs-toggle="dropdown" aria-expanded="false">
+                            <option value="NA" id="industry_reset">Select Industry</option>
+                            {% for entry in industry %}
+                            <option value="{{entry}}" class="text-capitalize">{{entry}}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
                 <div class="col-4 my-1 px-1">
                     <div class="dropdown w-100">
-                        <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="yearFounded">
-                          <option value="NA" id="yearFoundedReset">Select Year Founded</option>
+                        <select class="form-control border border-secondary border-2 w-100" type="button" name="year_founded" id="year_founded">
+                            <option value="NA" id="yearFoundedReset">Select Year Founded</option>
+                            {% for entry in year_founded %}
+                            <option value="{{entry}}" class="text-capitalize">{{entry}}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -32,8 +41,11 @@
                 <div class="col-4 my-1 mx-0 px-1">
                     <div class="dropdown w-100">
                         <div class="dropdown w-100">
-                            <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="city">
-                              <option value="NA" id="cityReset">Select City</option>
+                            <select class="form-control border border-secondary border-2 w-100" name="city" type="button" id="city">
+                                <option value="NA" id="cityReset">Select City</option>
+                                {% for entry in city %}
+                                <option value="{{entry}}">{{entry}}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -41,8 +53,11 @@
                 <div class="col-4 my-1 mx-0 px-1">
                     <div class="dropdown w-100">
                         <div class="dropdown w-100">
-                            <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="state">
-                              <option value="NA" id="stateReset">Select State</option>
+                            <select class="form-control border border-secondary border-2 w-100" name="state" type="button" id="state">
+                                <option value="NA" id="stateReset">Select State</option>
+                                {% for entry in state %}
+                                <option value="{{entry}}">{{entry}}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -50,8 +65,11 @@
                 <div class="col-4 my-1 mx-0 px-1">
                     <div class="dropdown w-100">
                         <div class="dropdown w-100">
-                            <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="country">
-                              <option value="NA" id="countryReset">Select Country</option>
+                            <select class="form-control border border-secondary border-2 w-100" name="country" type="button" id="country">
+                                <option value="NA" id="countryReset">Select Country</option>
+                                {% for entry in countryList %}
+                                <option value="{{entry}}">{{entry}}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -61,7 +79,7 @@
                 <div class="col-4 my-1 mx-0 px-1">
                     <div class="dropdown w-100">
                         <div class="dropdown w-100">
-                            <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="currentEstimatedEmployeeCount">
+                            <select class="form-control border border-secondary border-2 w-100" name="current_employee_estimate" type="button" id="current_employee_estimate">
                               <option value="NA" id="currentEstimatedEmployeeCountReset">Select Current Estimated Employee Count</option>
                             </select>
                         </div>
@@ -70,7 +88,7 @@
                 <div class="col-4 my-1 mx-0 px-1">
                     <div class="dropdown w-100">
                         <div class="dropdown w-100">
-                            <select class="form-control border border-secondary border-2 w-100 text-center" type="button" id="totalEstimatedEmployeeCount">
+                            <select class="form-control border border-secondary border-2 w-100" name="total_employee_estimate" type="button" id="total_employee_estimate">
                               <option value="NA" id="totalEstimatedEmployeeCountReset">Select Total Estimated Employee Count</option>
                             </select>
                         </div>
@@ -84,7 +102,7 @@
                     </button>
                 </div>
                 <div class="col-4 my-1 mx-0 px-1">
-                    <button class="btn btn-secondary text-white fw-bold w-100 text-center" type="button" id="resetQueryFieldsBtn" style="background-color: #afb2b6 !important;">
+                    <button class="btn btn-secondary text-white fw-bold w-100 text-center" type="reset" id="resetQueryFieldsBtn" style="background-color: #afb2b6 !important;">
                         Reset
                     </button>
                 </div>
@@ -96,7 +114,54 @@
 {% endblock body %}
 
 {% block javascript %}
+<script>
+    $(document).ready(function() {
+        let company_name = $('#company_name')
+        let year_founded = $('#year_founded')
+        let industry = $('#industry')
+        let city = $('#city')
+        let state = $('#state')
+        let country = $('#country')
+        let total_employee_estimate = $('#total_employee_estimate')
+        const alertBox = document.getElementById('alert-box')
+        
+        $('#queryDataBtn').on('click', ()=>{
+            let csrf_token = $('input[name="csrfmiddlewaretoken"]').val()
+            let searchResultForm = $('#searchResultForm')
 
+            
+            let data ={
+                'company_name' : company_name.val(),
+                'year_founded' : year_founded.val(),
+                'industry' : industry.val(),
+                'city' : city.val(),
+                'state' : state.val(),
+                'country' : country.val(),
+                'total_employee_estimate' : total_employee_estimate.val(),
+                'csrfmiddlewaretoken' : csrf_token
+            }
+            
+            $.ajax({
+                type: "POST",
+                url: "/query_api/",
+                data: data,
+                success: function(response) {
+                    console.log(response)
+                    alertBox.innerHTML=`<div class="alert alert-primary alert-dismissible" role="alert">
+                        ${response['message']}.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`
+                },
+                error: function(error){
+                    alertBox.innerHTML=`<div class="alert alert-danger alert-dismissible" role="alert">
+                        ${error['message']}.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`
+                }
+            })
+        }) 
+    })    
+</script>
 <script>
     $('#query_builder_tab').css('border-bottom','5px solid black')
     $('#query_builder_tab').css('font-weight','bolder')

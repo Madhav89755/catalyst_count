@@ -111,7 +111,7 @@
             },
             success: function(response){
                 alertBox.innerHTML = `<div class="alert alert-success alert-dismissible" role="alert">
-                    Operation Compleated.
+                    ${response['message']}.
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>`
                 document.getElementById('btn_status').classList.add('not-visible')
